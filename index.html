@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>ใบกิจกรรม 3.1 เทคนิค 5W1H</title>
+  <title>กิจกรรม 3.1 เทคนิค 5W1H</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     body { font-family: 'Sarabun', sans-serif; background-color: #f3f4f6; }
@@ -19,7 +19,7 @@
   <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
     <div class="text-center mb-6">
       <h1 class="text-2xl font-bold text-indigo-700">ใบกิจกรรม 3.1 เทคนิค 5W1H</h1>
-      <p class="text-gray-600 text-sm mt-1">การตั้งคำถามและวิเคราะห์ข้อมูล ระดับชั้นมัธยมศึกษาปีที่ 4</p>
+      <p class="text-gray-600 text-sm mt-1">การตั้งถามและวิเคราะห์ข้อมูล ระดับชั้นมัธยมศึกษาปีที่ 4</p>
     </div>
 
     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
@@ -48,7 +48,7 @@
           <input type="text" name="studentId" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">ห้อง (ม.4/X)</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">ห้อง</label>
           <input type="text" name="room" placeholder="เช่น 1" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
         <div>
@@ -80,7 +80,6 @@
   </div>
 
   <script>
-    // นิยามคำถาม 5W1H
     const qList = [
       { id: 'who', title: '1. Who (ใคร)', desc: 'ใครคือบุคคลที่เกี่ยวข้องกับปัญหานี้ หรือใครได้รับผลกระทบ?' },
       { id: 'what', title: '2. What (อะไร)', desc: 'ปัญหานี้คืออะไร เกิดอะไรขึ้นจากสถานการณ์ที่กำหนด?' },
@@ -90,7 +89,6 @@
       { id: 'how', title: '6. How (อย่างไร)', desc: 'จะมีแนวทางหรือวิธีการแก้ไขปัญหานี้ได้อย่างไรบ้าง?' }
     ];
 
-    // ชุดคีย์เวิร์ดที่ย้ายมาจากฝั่ง Server เพื่อความเร็วสูงสุดแบบทันทีทันใด
     const aiKeywords = {
       who: ["ผู้นำชุมชน", "ลูกบ้าน", "คนในพื้นที่", "ชุมชน", "ชาวบ้าน", "คนในหมู่บ้าน", "ผู้บริโภค"],
       what: ["ขยะพลาสติก", "ขยะ", "เดลิเวอรี", "บรรจุภัณฑ์", "ล้นถัง", "กลิ่นเหม็น", "เพิ่มขึ้น"],
@@ -103,7 +101,6 @@
     const container = document.getElementById('questionsContainer');
     let scores = { who: 0, what: 0, where: 0, when: 0, why: 0, how: 0 };
 
-    // สร้างกล่องข้อความสำหรับพิมพ์ตอบ
     qList.forEach(q => {
       const div = document.createElement('div');
       div.className = "mb-6 p-4 border border-gray-200 rounded-lg bg-white shadow-sm transition-all duration-200";
@@ -140,7 +137,6 @@
       container.appendChild(div);
     });
 
-    // ฟังก์ชันป้องกันการวาง (Paste) 
     function preventPaste(e, qId) {
       e.preventDefault(); 
       const box = document.getElementById(`box_${qId}`);
@@ -160,7 +156,6 @@
       return false;
     }
 
-    // ฟังก์ชันคำนวณคะแนนแบบทันทีทันใดในฝั่งผู้ใช้งาน (ไม่ต้องรอ Server ค้าง)
     function instantLiveCheck(qId) {
       const studentAnswer = document.getElementById(`input_${qId}`).value;
       
@@ -175,23 +170,16 @@
       let matchCount = 0;
       let keywords = aiKeywords[qId];
       
-      // นับคำสำคัญที่ตรง
       keywords.forEach(word => {
         if (text.includes(word.toLowerCase())) matchCount++;
       });
       
-      // สูตรประเมินความถูกต้อง (คิดฐานเดียวกับฝั่งเซิร์ฟเวอร์เดิม)
       let basePercent = (matchCount / keywords.length) * 60;
       let lengthBonus = Math.min(text.length * 1.5, 40);
       let finalPercent = Math.min(Math.round(basePercent + lengthBonus), 100);
-      
-      // คำนวณคะแนนสุทธิข้อละ 1 คะแนน
       let score = parseFloat(((finalPercent / 100) * 1).toFixed(1));
       
-      // บันทึกค่าลง Object
       scores[qId] = score;
-      
-      // อัปเดตผลขึ้นหน้าจอทันทีสะใจ ไม่หน่วง ไม่ค้าง
       updateUI(qId, finalPercent, score);
       updateTotalScore();
     }
@@ -230,7 +218,6 @@
         total_score: Object.values(scores).reduce((a, b) => a + b, 0)
       };
 
-      // ส่งบันทึกข้อมูลลง Google Sheets เพียงครั้งเดียวตอนกดส่งงาน
       google.script.run.withSuccessHandler(function(response) {
         alert(response);
         form.reset();
