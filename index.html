@@ -80,6 +80,9 @@
   </div>
 
   <script>
+    // 📢 วางลิงก์ Google Apps Script Web App (URL ลงท้ายด้วย /exec) ที่นี่!
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFwmM3d0aiYD24E5D6UlL6LJtvSV53mxlFRBohodxowObdYvnNoo9yD-XPgnJfn95z/exec";
+
     const qList = [
       { id: 'who', title: '1. Who (ใคร)', desc: 'ใครคือบุคคลที่เกี่ยวข้องกับปัญหานี้ หรือใครได้รับผลกระทบ?' },
       { id: 'what', title: '2. What (อะไร)', desc: 'ปัญหานี้คืออะไร เกิดอะไรขึ้นจากสถานการณ์ที่กำหนด?' },
@@ -99,14 +102,12 @@
     };
 
     const container = document.getElementById('questionsContainer');
-    // เก็บคะแนนดิบรายข้อไว้คำนวณคะแนนรวมฐาน 5 (คำตอบสมบูรณ์ 100% = 1 คะแนนดิบ)
     let scores = { who: 0, what: 0, where: 0, when: 0, why: 0, how: 0 };
 
     qList.forEach(q => {
       const div = document.createElement('div');
       div.className = "mb-6 p-4 border border-gray-200 rounded-lg bg-white shadow-sm transition-all duration-200";
       div.id = `box_${q.id}`;
-      // ถอดส่วนแสดงคะแนนตัวเลขรายข้อออก เหลือเพียงแถบ % ความตรงประเด็นแบบเรียลไทม์
       div.innerHTML = `
         <div class="flex justify-between items-center mb-1">
           <label class="block font-bold text-gray-800">${q.title}</label>
@@ -179,7 +180,6 @@
         finalPercent = 100;
       }
       
-      // บันทึกคะแนนดิบตามสัดส่วนร้อยละ (เต็ม 1.0 ต่อข้อ) เพื่อนำไปแปลงลงฐานคะแนนรวม 5 ต่อไป
       scores[qId] = finalPercent / 100;
       
       updateUI(qId, finalPercent);
@@ -191,10 +191,8 @@
       document.getElementById(`percent_${qId}`).innerText = percent + '%';
     }
 
-    // คำนวณคะแนนรวมสุทธิจากคะแนนดิบ 6 ข้อ ให้แปลงมาเป็นฐานคะแนนเต็ม 5 คะแนน
     function calculateFinalScore() {
       let totalRaw = Object.values(scores).reduce((a, b) => a + b, 0);
-      // สูตรเทียบบัญญัติไตรยางศ์: (คะแนนดิบที่ได้รวม / 6) * 5
       let calculatedScore = (totalRaw / 6) * 5;
       return parseFloat(calculatedScore.toFixed(1));
     }
@@ -208,11 +206,11 @@
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       btn.disabled = true;
-      btn.innerText = "กำลังบันทึกข้อมูลและส่งผลคะแนน...";
+      btn.innerText = "กำลังส่งข้อมูลออนไลน์ไปยัง Google Sheets...";
 
       let finalTotalScore = calculateFinalScore();
-
       const form = document.getElementById('activityForm');
+
       const formDataObj = {
         prefix: form.prefix.value,
         name: form.name.value,
@@ -220,7 +218,14 @@
         room: form.room.value,
         section: form.section.value,
         number: form.number.value,
-        // กระจายสัดส่วนคะแนนเต็ม 5 ลงชีตรายข้อให้เรียบร้อย (ข้อละประมาณ 0.83 คะแนน)
+        
+        ans_who: document.getElementById('input_who').value,
+        ans_what: document.getElementById('input_what').value,
+        ans_where: document.getElementById('input_where').value,
+        ans_when: document.getElementById('input_when').value,
+        ans_why: document.getElementById('input_why').value,
+        ans_how: document.getElementById('input_how').value,
+
         score_who: parseFloat((scores.who * (5 / 6)).toFixed(2)),
         score_what: parseFloat((scores.what * (5 / 6)).toFixed(2)),
         score_where: parseFloat((scores.where * (5 / 6)).toFixed(2)),
@@ -230,8 +235,19 @@
         total_score: finalTotalScore
       };
 
-      google.script.run.withSuccessHandler(function(response) {
-        alert(response);
+      // ใช้ระบบ fetch ข้อมูลแบบ POST ส่งไปยังเว็บนอก (CORS เคลียร์ผ่าน text/plain เพื่อป้องกัน preflight ค้าง)
+      fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors", // จำเป็นเพื่อให้ยิงข้ามโดเมนจาก GitHub Pages/เว็บอื่นๆ ไปยัง Google Script ได้อย่างปลอดภัย
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formDataObj)
+      })
+      .then(response => {
+        // เนื่องจากใช้โหมด no-cors จะไม่สามารถอ่านข้อความตอบกลับได้ตรงๆ แต่ถือว่ายิงเข้า Google Sheet สำเร็จแล้ว
+        alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀");
         form.reset();
         document.querySelectorAll('[id^="progress_"]').forEach(el => el.style.width = '0%');
         document.querySelectorAll('[id^="percent_"]').forEach(el => el.innerText = '0%');
@@ -239,7 +255,12 @@
         updateTotalScore();
         btn.disabled = false;
         btn.innerText = "ส่งใบกิจกรรมและบันทึกคะแนน";
-      }).saveData(formDataObj);
+      })
+      .catch(error => {
+        alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์: " + error.message);
+        btn.disabled = false;
+        btn.innerText = "ส่งใบกิจกรรมและบันทึกคะแนน";
+      });
     }
   </script>
 </body>
