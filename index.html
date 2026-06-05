@@ -72,19 +72,18 @@
       
       <div id="questionsContainer"></div>
 
-      <div class="mt-6 p-4 bg-indigo-50 rounded-lg flex justify-between items-center border border-indigo-200">
-        <span class="font-bold text-indigo-900">คะแนนรวมทั้งหมด (Total Score):</span>
-        <span class="text-2xl font-black text-indigo-700" id="totalScoreDisplay">0.0 / 5</span>
+      <div id="scoreBox" class="mt-6 p-4 bg-green-50 rounded-lg flex justify-between items-center border border-green-200 hidden animation-fadeIn">
+        <span class="font-bold text-green-900">🎉 ส่งคำตอบเสร็จสิ้น! คะแนนรวมทั้งหมดของคุณคือ:</span>
+        <span class="text-2xl font-black text-green-700" id="totalScoreDisplay">0.0 / 5</span>
       </div>
 
-      <button type="submit" id="submitBtn" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer">
+      <button type="submit" id="submitBtn" class="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer shadow">
         ส่งใบกิจกรรมและบันทึกคะแนน
       </button>
     </form>
   </div>
 
   <script>
-    // 📢 วางลิงก์ Google Apps Script Web App (URL ลงท้ายด้วย /exec) ที่นี่!
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFwmM3d0aiYD24E5D6UlL6LJtvSV53mxlFRBohodxowObdYvnNoo9yD-XPgnJfn95z/exec";
 
     const qList = [
@@ -96,7 +95,6 @@
       { id: 'how', title: '6. How (อย่างไร)', desc: 'จะมีแนวทางหรือวิธีการแก้ไขปัญหานี้ได้อย่างไรบ้าง?<br><span class="italic text-[11px] text-gray-400">How can this problem be solved or managed? What are the solutions?</span>' }
     ];
 
-    // ปรับปรุงคลังคำสำคัญ (Keywords) ให้รองรับสองภาษา ไทย-อังกฤษ (ตัวเล็ก/ใหญ่ไม่มีผล)
     const aiKeywords = {
       who: ["ผู้นำชุมชน", "ลูกบ้าน", "คนในพื้นที่", "ชุมชน", "ชาวบ้าน", "คนในหมู่บ้าน", "ผู้บริโภค", "leader", "resident", "people", "villager", "community", "citizen"],
       what: ["ขยะพลาสติก", "ขยะ", "เดลิเวอรี", "บรรจุภัณฑ์", "ล้นถัง", "กลิ่นเหม็น", "plastic", "waste", "garbage", "trash", "delivery", "packaging", "overflow", "smell", "odor"],
@@ -166,11 +164,9 @@
       if (!studentAnswer || studentAnswer.trim() === "") {
         scores[qId] = 0;
         updateUI(qId, 0);
-        updateTotalScore();
         return;
       }
 
-      // ใช้ .toLowerCase() เพื่อให้ตรวจสอบคำภาษาอังกฤษได้กว้างขึ้น ไม่จำกัดพิมพ์เล็ก/ใหญ่
       let text = studentAnswer.toLowerCase();
       let matchCount = 0;
       let keywords = aiKeywords[qId];
@@ -187,9 +183,7 @@
       }
       
       scores[qId] = finalPercent / 100;
-      
       updateUI(qId, finalPercent);
-      updateTotalScore();
     }
 
     function updateUI(qId, percent) {
@@ -203,16 +197,21 @@
       return parseFloat(calculatedScore.toFixed(1));
     }
 
-    function updateTotalScore() {
+    // ปรับปรุง: ย้ายส่วนคำนวณคะแนนมาแสดงผลตรงนี้เพื่ออัปเดตหลังจากส่งสำเร็จเท่านั้น
+    function displayFinalScore() {
       let finalScore = calculateFinalScore();
       document.getElementById('totalScoreDisplay').innerText = finalScore.toFixed(1) + " / 5";
+      
+      // แสดงกล่องคะแนนและเลื่อนจอมาโฟกัส
+      const scoreBox = document.getElementById('scoreBox');
+      scoreBox.classList.remove('hidden');
+      scoreBox.scrollIntoView({ behavior: 'smooth' });
     }
 
     function handleFormSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       
-      // ปรับปรุง: ล็อกปุ่มชั่วขณะเพื่อแสดงสถานะการส่ง (ไม่กด disabled ค้างเพื่อให้สามารถแก้ไขและส่งใหม่ได้)
       btn.disabled = true;
       btn.className = "w-full mt-6 bg-gray-400 text-white font-bold py-3 px-4 rounded-lg cursor-not-allowed";
       btn.innerText = "กำลังส่งข้อมูลออนไลน์ไปยัง Google Sheets...";
@@ -254,9 +253,12 @@
         body: JSON.stringify(formDataObj)
       })
       .then(response => {
-        alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀 (คุณยังสามารถแก้ไขคำตอบและกดส่งซ้ำเพื่ออัปเดตคะแนนได้ครับ)");
+        alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀");
         
-        // ปรับปรุง: คืนสถานะปุ่มและเปลี่ยนรูปแบบเพื่อให้ผู้เรียนแก้ไขและกดส่งอัปเดตคะแนนซ้ำได้
+        // เรียกฟังก์ชันคำนวณและแสดงผลคะแนนทันทีที่ส่งเสร็จ
+        displayFinalScore();
+        
+        // คืนสถานะปุ่มและปรับเป็นโหมดส่งซ้ำ (Resubmit) เผื่อนักเรียนอยากแก้ไข
         btn.disabled = false;
         btn.className = "w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer shadow-md";
         btn.innerText = "🔄 แก้ไขคำตอบและส่งใหม่อีกครั้ง (Resubmit)";
