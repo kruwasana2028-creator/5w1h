@@ -19,12 +19,16 @@
   <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
     <div class="text-center mb-6">
       <h1 class="text-2xl font-bold text-indigo-700">กิจกรรม 3.1 เทคนิค 5W1H</h1>
-      <p class="text-gray-600 text-sm mt-1">การตั้งคำถามและวิเคราะห์ข้อมูล</p>
+      <p class="text-gray-600 text-sm mt-1">การตั้งคำถามและวิเคราะห์ข้อมูล (Questioning and Data Analysis)</p>
     </div>
 
     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
-      <h3 class="font-bold text-amber-800 mb-1">📢 สถานการณ์ที่กำหนด:</h3>
-      <p class="text-gray-700 text-sm leading-relaxed select-none"> "ในชุมชนแห่งหนึ่ง ขยะพลาสติกจากบรรจุภัณฑ์อาหารเดลิเวอรีเพิ่มขึ้นอย่างรวดเร็วในช่วงปีที่ผ่านมา ส่งผลให้ถังขยะในหมู่บ้านล้น และมีกลิ่นเหม็นรบกวนในช่วงเย็น ผู้นำชุมชนจึงต้องการหาวิธีจัดการและรณรงค์ให้ลูกบ้านลดการใช้พลาสติก หรือนำมาคัดแยกอย่างถูกวิธีเพื่อลดผลกระทบต่อสิ่งแวดล้อมและสุขภาพของคนในพื้นที่"
+      <h3 class="font-bold text-amber-800 mb-1">📢 สถานการณ์ที่กำหนด (Scenario):</h3>
+      <p class="text-gray-700 text-sm leading-relaxed select-none"> 
+        "ในชุมชนแห่งหนึ่ง ขยะพลาสติกจากบรรจุภัณฑ์อาหารเดลิเวอรีเพิ่มขึ้นอย่างรวดเร็วในช่วงปีที่ผ่านมา ส่งผลให้ถังขยะในหมู่บ้านล้น และมีกลิ่นเหม็นรบกวนในช่วงเย็น ผู้นำชุมชนจึงต้องการหาวิธีจัดการและรณรงค์ให้ลูกบ้านลดการใช้พลาสติก หรือนำมาคัดแยกอย่างถูกวิธีเพื่อลดผลกระทบต่อสิ่งแวดล้อมและสุขภาพของคนในพื้นที่"
+        <span class="block mt-2 pt-2 border-t border-amber-200 text-gray-500 text-xs italic">
+          "In a certain community, plastic waste from food delivery packaging has rapidly increased over the past year, causing village trash cans to overflow and emit a foul odor in the evening. The community leader wants to find ways to manage this issue and campaign for residents to reduce plastic use or separate waste properly to minimize environmental and health impacts on local residents."
+        </span>
       </p>
     </div>
 
@@ -32,7 +36,7 @@
       
       <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">คำนำหน้า</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">คำนำหน้า (Prefix)</label>
           <select name="prefix" required class="w-full border rounded p-2 text-sm bg-white">
             <option value="">เลือก...</option>
             <option value="นาย">นาย</option>
@@ -40,36 +44,36 @@
           </select>
         </div>
         <div class="col-span-1 md:col-span-2">
-          <label class="block text-xs font-bold text-gray-700 mb-1">ชื่อ-นามสกุล</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">ชื่อ-นามสกุล (Full Name)</label>
           <input type="text" name="name" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">เลขประจำตัวนักเรียน</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">เลขประจำตัวนักเรียน (Student ID)</label>
           <input type="text" name="studentId" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">ห้อง</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">ห้อง (Class)</label>
           <input type="text" name="room" placeholder="เช่น 1" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">ตอน</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">ตอน (Section)</label>
           <select name="section" required class="w-full border rounded p-2 text-sm bg-white">
             <option value="ก">ก</option>
             <option value="ข">ข</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">เลขที่</label>
+          <label class="block text-xs font-bold text-gray-700 mb-1">เลขที่ (No.)</label>
           <input type="number" name="number" min="1" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
       </div>
 
-      <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">✍️ ส่วนการวิเคราะห์ข้อมูลด้วย 5W1H</h2>
+      <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">✍️ ส่วนการวิเคราะห์ข้อมูลด้วย 5W1H (5W1H Analysis)</h2>
       
       <div id="questionsContainer"></div>
 
       <div class="mt-6 p-4 bg-indigo-50 rounded-lg flex justify-between items-center border border-indigo-200">
-        <span class="font-bold text-indigo-900">คะแนนรวมทั้งหมด:</span>
+        <span class="font-bold text-indigo-900">คะแนนรวมทั้งหมด (Total Score):</span>
         <span class="text-2xl font-black text-indigo-700" id="totalScoreDisplay">0.0 / 5</span>
       </div>
 
@@ -84,21 +88,22 @@
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFwmM3d0aiYD24E5D6UlL6LJtvSV53mxlFRBohodxowObdYvnNoo9yD-XPgnJfn95z/exec";
 
     const qList = [
-      { id: 'who', title: '1. Who (ใคร)', desc: 'ใครคือบุคคลที่เกี่ยวข้องกับปัญหานี้ หรือใครได้รับผลกระทบ?' },
-      { id: 'what', title: '2. What (อะไร)', desc: 'ปัญหานี้คืออะไร เกิดอะไรขึ้นจากสถานการณ์ที่กำหนด?' },
-      { id: 'where', title: '3. Where (ที่ไหน)', desc: 'เหตุการณ์หรือปัญหานี้เกิดขึ้นที่สถานที่ใด?' },
-      { id: 'when', title: '4. When (เมื่อไหร่)', desc: 'ปัญหานี้เกิดขึ้นตอนไหน หรือช่วงเวลาใด?' },
-      { id: 'why', title: '5. Why (ทำไม)', desc: 'ทำไมจึงเกิดปัญหานี้ขึ้น สาเหตุหลักมาจากอะไร?' },
-      { id: 'how', title: '6. How (อย่างไร)', desc: 'จะมีแนวทางหรือวิธีการแก้ไขปัญหานี้ได้อย่างไรบ้าง?' }
+      { id: 'who', title: '1. Who (ใคร)', desc: 'ใครคือบุคคลที่เกี่ยวข้องกับปัญหานี้ หรือใครได้รับผลกระทบ?<br><span class="italic text-[11px] text-gray-400">Who is involved in or affected by this problem?</span>' },
+      { id: 'what', title: '2. What (อะไร)', desc: 'ปัญหานี้คืออะไร เกิดอะไรขึ้นจากสถานการณ์ที่กำหนด?<br><span class="italic text-[11px] text-gray-400">What is the problem? What happened in the given scenario?</span>' },
+      { id: 'where', title: '3. Where (ที่ไหน)', desc: 'เหตุการณ์หรือปัญหานี้เกิดขึ้นที่สถานที่ใด?<br><span class="italic text-[11px] text-gray-400">Where did this event or problem occur?</span>' },
+      { id: 'when', title: '4. When (เมื่อไหร่)', desc: 'ปัญหานี้เกิดขึ้นตอนไหน หรือช่วงเวลาใด?<br><span class="italic text-[11px] text-gray-400">When did this problem occur? At what period or time?</span>' },
+      { id: 'why', title: '5. Why (ทำไม)', desc: 'ทำไมจึงเกิดปัญหานี้ขึ้น สาเหตุหลักมาจากอะไร?<br><span class="italic text-[11px] text-gray-400">Why did this problem happen? What is the root cause?</span>' },
+      { id: 'how', title: '6. How (อย่างไร)', desc: 'จะมีแนวทางหรือวิธีการแก้ไขปัญหานี้ได้อย่างไรบ้าง?<br><span class="italic text-[11px] text-gray-400">How can this problem be solved or managed? What are the solutions?</span>' }
     ];
 
+    // ปรับปรุงคลังคำสำคัญ (Keywords) ให้รองรับสองภาษา ไทย-อังกฤษ (ตัวเล็ก/ใหญ่ไม่มีผล)
     const aiKeywords = {
-      who: ["ผู้นำชุมชน", "ลูกบ้าน", "คนในพื้นที่", "ชุมชน", "ชาวบ้าน", "คนในหมู่บ้าน", "ผู้บริโภค"],
-      what: ["ขยะพลาสติก", "ขยะ", "เดลิเวอรี", "บรรจุภัณฑ์", "ล้นถัง", "กลิ่นเหม็น"],
-      where: ["หมู่บ้าน", "ชุมชน", "ในหมู่บ้าน", "ในชุมชน", "ถังขยะ"],
-      when: ["ช่วงเย็น", "ช่วงปีที่ผ่านมา", "ปีที่แล้ว", "เวลาเย็น", "ตอนเย็น"],
-      why: ["สั่งอาหาร", "เดลิเวอรี", "ไม่คัดแยก", "ใช้พลาสติก", "ขยะเพิ่ม"],
-      how: ["จัดการ", "รณรงค์", "ลดการใช้", "คัดแยก", "แยกขยะ", "ลดพลาสติก"]
+      who: ["ผู้นำชุมชน", "ลูกบ้าน", "คนในพื้นที่", "ชุมชน", "ชาวบ้าน", "คนในหมู่บ้าน", "ผู้บริโภค", "leader", "resident", "people", "villager", "community", "citizen"],
+      what: ["ขยะพลาสติก", "ขยะ", "เดลิเวอรี", "บรรจุภัณฑ์", "ล้นถัง", "กลิ่นเหม็น", "plastic", "waste", "garbage", "trash", "delivery", "packaging", "overflow", "smell", "odor"],
+      where: ["หมู่บ้าน", "ชุมชน", "ในหมู่บ้าน", "ในชุมชน", "ถังขยะ", "village", "community", "neighborhood", "bin", "trash can"],
+      when: ["ช่วงเย็น", "ช่วงปีที่ผ่านมา", "ปีที่แล้ว", "เวลาเย็น", "ตอนเย็น", "evening", "past year", "last year", "pm"],
+      why: ["สั่งอาหาร", "เดลิเวอรี", "ไม่คัดแยก", "ใช้พลาสติก", "ขยะเพิ่ม", "order", "delivery", "sort", "separate", "use plastic", "increase"],
+      how: ["จัดการ", "รณรงค์", "ลดการใช้", "คัดแยก", "แยกขยะ", "ลดพลาสติก", "manage", "campaign", "reduce", "sort", "separate", "less plastic", "recycle"]
     };
 
     const container = document.getElementById('questionsContainer');
@@ -111,13 +116,13 @@
       div.innerHTML = `
         <div class="flex justify-between items-center mb-1">
           <label class="block font-bold text-gray-800">${q.title}</label>
-          <span id="warning_${q.id}" class="text-xs font-bold text-red-500 hidden">⚠️ ห้ามคัดลอกข้อความมาวาง! ต้องพิมพ์ตอบเองเท่านั้น</span>
+          <span id="warning_${q.id}" class="text-xs font-bold text-red-500 hidden">⚠️ ห้ามคัดลอกข้อความมาวาง! ต้องพิมพ์ตอบเองเท่านั้น (No Pasting!)</span>
         </div>
         <p class="text-xs text-gray-500 mb-2">${q.desc}</p>
         
         <textarea id="input_${q.id}" name="ans_${q.id}" rows="2" 
           class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-colors" 
-          placeholder="พิมพ์คำตอบของคุณที่นี่..." 
+          placeholder="พิมพ์คำตอบของคุณที่นี่... (Type your answer here...)" 
           oninput="instantLiveCheck('${q.id}')" 
           onpaste="preventPaste(event, '${q.id}')"
           oncontextmenu="return false;"
@@ -125,7 +130,7 @@
         
         <div class="mt-2 flex items-center justify-between text-xs">
           <div class="flex items-center gap-2 w-full">
-            <span class="text-gray-500 font-medium whitespace-nowrap">ความตรงประเด็น:</span>
+            <span class="text-gray-500 font-medium whitespace-nowrap">ความตรงประเด็น (Relevance):</span>
             <div class="w-full bg-gray-200 rounded-full h-2">
               <div id="progress_${q.id}" class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
@@ -165,6 +170,7 @@
         return;
       }
 
+      // ใช้ .toLowerCase() เพื่อให้ตรวจสอบคำภาษาอังกฤษได้กว้างขึ้น ไม่จำกัดพิมพ์เล็ก/ใหญ่
       let text = studentAnswer.toLowerCase();
       let matchCount = 0;
       let keywords = aiKeywords[qId];
@@ -205,7 +211,10 @@
     function handleFormSubmit(e) {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
+      
+      // ปรับปรุง: ล็อกปุ่มชั่วขณะเพื่อแสดงสถานะการส่ง (ไม่กด disabled ค้างเพื่อให้สามารถแก้ไขและส่งใหม่ได้)
       btn.disabled = true;
+      btn.className = "w-full mt-6 bg-gray-400 text-white font-bold py-3 px-4 rounded-lg cursor-not-allowed";
       btn.innerText = "กำลังส่งข้อมูลออนไลน์ไปยัง Google Sheets...";
 
       let finalTotalScore = calculateFinalScore();
@@ -235,10 +244,9 @@
         total_score: finalTotalScore
       };
 
-      // ใช้ระบบ fetch ข้อมูลแบบ POST ส่งไปยังเว็บนอก (CORS เคลียร์ผ่าน text/plain เพื่อป้องกัน preflight ค้าง)
       fetch(WEB_APP_URL, {
         method: "POST",
-        mode: "no-cors", // จำเป็นเพื่อให้ยิงข้ามโดเมนจาก GitHub Pages/เว็บอื่นๆ ไปยัง Google Script ได้อย่างปลอดภัย
+        mode: "no-cors", 
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
@@ -246,20 +254,18 @@
         body: JSON.stringify(formDataObj)
       })
       .then(response => {
-        // เนื่องจากใช้โหมด no-cors จะไม่สามารถอ่านข้อความตอบกลับได้ตรงๆ แต่ถือว่ายิงเข้า Google Sheet สำเร็จแล้ว
-        alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀");
-        form.reset();
-        document.querySelectorAll('[id^="progress_"]').forEach(el => el.style.width = '0%');
-        document.querySelectorAll('[id^="percent_"]').forEach(el => el.innerText = '0%');
-        scores = { who: 0, what: 0, where: 0, when: 0, why: 0, how: 0 };
-        updateTotalScore();
+        alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀 (คุณยังสามารถแก้ไขคำตอบและกดส่งซ้ำเพื่ออัปเดตคะแนนได้ครับ)");
+        
+        // ปรับปรุง: คืนสถานะปุ่มและเปลี่ยนรูปแบบเพื่อให้ผู้เรียนแก้ไขและกดส่งอัปเดตคะแนนซ้ำได้
         btn.disabled = false;
-        btn.innerText = "ส่งใบกิจกรรมและบันทึกคะแนน";
+        btn.className = "w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer shadow-md";
+        btn.innerText = "🔄 แก้ไขคำตอบและส่งใหม่อีกครั้ง (Resubmit)";
       })
       .catch(error => {
         alert("เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์: " + error.message);
         btn.disabled = false;
-        btn.innerText = "ส่งใบกิจกรรมและบันทึกคะแนน";
+        btn.className = "w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer";
+        btn.innerText = "ลองส่งข้อมูลอีกครั้ง";
       });
     }
   </script>
