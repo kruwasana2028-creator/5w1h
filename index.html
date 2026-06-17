@@ -360,6 +360,14 @@
       let finalTotalScore = calculateFinalScore();
       const form = document.getElementById('activityForm');
 
+      // คำนวณคะแนนย่อยแต่ละตัวแบบเต็ม 0.83 (5 คะแนนหารด้วย 6 ข้อ) เพื่อบันทึกเข้าคลังข้อมูล
+      const subScoreWho = parseFloat((scores.who * (5 / 6)).toFixed(2));
+      const subScoreWhat = parseFloat((scores.what * (5 / 6)).toFixed(2));
+      const subScoreWhere = parseFloat((scores.where * (5 / 6)).toFixed(2));
+      const subScoreWhen = parseFloat((scores.when * (5 / 6)).toFixed(2));
+      const subScoreWhy = parseFloat((scores.why * (5 / 6)).toFixed(2));
+      const subScoreHow = parseFloat((scores.how * (5 / 6)).toFixed(2));
+
       const formDataObj = {
         scenario_id: form.scenario_id.value,
         prefix: form.prefix.value,
@@ -376,12 +384,12 @@
         ans_why: document.getElementById('input_why').value,
         ans_how: document.getElementById('input_how').value,
 
-        score_who: parseFloat((scores.who * (5 / 6)).toFixed(2)),
-        score_what: parseFloat((scores.what * (5 / 6)).toFixed(2)),
-        score_where: parseFloat((scores.where * (5 / 6)).toFixed(2)),
-        score_when: parseFloat((scores.when * (5 / 6)).toFixed(2)),
-        score_why: parseFloat((scores.why * (5 / 6)).toFixed(2)),
-        score_how: parseFloat((scores.how * (5 / 6)).toFixed(2)),
+        score_who: subScoreWho,
+        score_what: subScoreWhat,
+        score_where: subScoreWhere,
+        score_when: subScoreWhen,
+        score_why: subScoreWhy,
+        score_how: subScoreHow,
         total_score: finalTotalScore
       };
 
@@ -395,7 +403,19 @@
         body: JSON.stringify(formDataObj)
       })
       .then(response => {
-        alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀");
+        // เพิ่มระบบแจ้งคะแนนผ่านกล่อง Alert ของบราวเซอร์
+        alert(
+          "🚀 ส่งใบกิจกรรมสำเร็จและจัดเก็บข้อมูลเรียบร้อยแล้ว!\n\n" +
+          "📊 รายละเอียดคะแนนวิเคราะห์ 5W1H (เต็มข้อละ 0.83 คะแนน):\n" +
+          "• Who (ใคร): " + subScoreWho + " คะแนน\n" +
+          "• What (อะไร): " + subScoreWhat + " คะแนน\n" +
+          "• Where (ที่ไหน): " + subScoreWhere + " คะแนน\n" +
+          "• When (เมื่อไหร่): " + subScoreWhen + " คะแนน\n" +
+          "• Why (ทำไม): " + subScoreWhy + " คะแนน\n" +
+          "• How (อย่างไร): " + subScoreHow + " คะแนน\n\n" +
+          "🏆 คะแนนรวมสุทธิของคุณคือ: " + finalTotalScore.toFixed(1) + " / 5 คะแนน"
+        );
+        
         displayFinalScore();
         
         btn.disabled = false;
