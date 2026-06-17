@@ -27,20 +27,21 @@
         <h3 class="font-bold text-amber-800">📢 สถานการณ์ที่กำหนด (Scenario):</h3>
       </div>
       <p id="scenarioTextContent" class="text-gray-700 text-sm leading-relaxed select-none"> 
-        <!-- ข้อความโจทย์ภาษาไทยจะแสดงที่นี่ -->
         <span id="scenarioTextEn" class="block mt-2 pt-2 border-t border-amber-200 text-gray-500 text-xs italic">
-          <!-- ข้อความโจทย์ภาษาอังกฤษจะแสดงที่นี่ -->
-        </span>
+          </span>
       </p>
     </div>
 
     <form id="activityForm" onsubmit="handleFormSubmit(event)">
       
-      <!-- ซ่อนไอดีของโจทย์ที่สุ่มได้ไว้เพื่อส่งไปยัง Google Sheets -->
       <input type="hidden" name="scenario_id" id="scenarioIdInput">
 
-      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
-        <div>
+      <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div class="col-span-2 md:col-span-2">
+          <label class="block text-xs font-bold text-gray-700 mb-1">เลขประจำตัวนักเรียน (Student ID)</label>
+          <input type="text" name="studentId" required class="w-full border rounded p-2 text-sm bg-white">
+        </div>
+        <div class="col-span-1 md:col-span-1">
           <label class="block text-xs font-bold text-gray-700 mb-1">คำนำหน้า (Prefix)</label>
           <select name="prefix" required class="w-full border rounded p-2 text-sm bg-white">
             <option value="">เลือก...</option>
@@ -52,22 +53,19 @@
           <label class="block text-xs font-bold text-gray-700 mb-1">ชื่อ-นามสกุล (Full Name)</label>
           <input type="text" name="name" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">เลขประจำตัวนักเรียน (Student ID)</label>
-          <input type="text" name="studentId" required class="w-full border rounded p-2 text-sm bg-white">
-        </div>
-        <div>
+
+        <div class="col-span-1 md:col-span-2">
           <label class="block text-xs font-bold text-gray-700 mb-1">ห้อง (Class)</label>
           <input type="text" name="room" placeholder="เช่น 1" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
-        <div>
+        <div class="col-span-1 md:col-span-2">
           <label class="block text-xs font-bold text-gray-700 mb-1">ตอน (Section)</label>
           <select name="section" required class="w-full border rounded p-2 text-sm bg-white">
             <option value="ก">ก</option>
             <option value="ข">ข</option>
           </select>
         </div>
-        <div>
+        <div class="col-span-2 md:col-span-1">
           <label class="block text-xs font-bold text-gray-700 mb-1">เลขที่ (No.)</label>
           <input type="number" name="number" min="1" required class="w-full border rounded p-2 text-sm bg-white">
         </div>
@@ -215,7 +213,7 @@
         th: "ผู้ใช้รถใช้ถนนบริเวณสี่แยกกลางเมือง มักขับรถฝ่าสัญญาณไฟจราจรในช่วงเวลากลางคืนหลังเที่ยงคืน (00:00 - 04:00 น.) ทำให้เกิดอุบัติเหตุรุนแรงบ่อยครั้ง ตำรวจจราจรในพื้นที่จึงต้องการติดตั้งระบบกล้องจับความเร็วและไฟสัญญาณแบบอัตโนมัติ",
         en: "Commuters at a city center intersection often run red lights at night after midnight (00:00 - 04:00 AM), causing frequent severe accidents. Local traffic police want to install speed cameras and an automated traffic light system.",
         keywords: {
-          who: ["ผู้ใช้รถใช้ถนน", "คนขับรถ", "ตำรวจจราจร", "ตำรวจ", "commuter", "driver", "traffic police", "officer"],
+          who: ["ผู้ใช้รถใช้ถนน", "คนขับรถ", "鐵路", "ตำรวจจราจร", "ตำรวจ", "commuter", "driver", "traffic police", "officer"],
           what: ["ฝ่าสัญญาณไฟ", "ฝ่าไฟแดง", "อุบัติเหตุรุนแรง", "run red light", "accident", "crash"],
           where: ["สี่แยกกลางเมือง", "สี่แยก", "ถนนกลางเมือง", "intersection", "crossroad", "junction"],
           when: ["เวลากลางคืน", "หลังเที่ยงคืน", "00:00", "04:00", "night", "midnight", "am"],
@@ -230,19 +228,14 @@
     const container = document.getElementById('questionsContainer');
     let scores = { who: 0, what: 0, where: 0, when: 0, why: 0, how: 0 };
 
-    // ฟังก์ชันสำหรับสุ่มโจทย์
     function initScenario() {
       const randomIndex = Math.floor(Math.random() * scenarios.length);
       currentScenario = scenarios[randomIndex];
       
-      // แสดงเฉพาะตัวโจทย์ ไม่แสดงป้ายเลขชุดข้อสอบแล้ว
       document.getElementById('scenarioTextContent').firstChild.textContent = ` "${currentScenario.th}" `;
       document.getElementById('scenarioTextEn').innerText = `"${currentScenario.en}"`;
       
-      // บันทึกไอดีโจทย์ลงใน Input ซ่อน (สำหรับส่งไปหลังบ้านเงียบๆ)
       document.getElementById('scenarioIdInput').value = currentScenario.id;
-
-      // กำหนดคีย์เวิร์ดของโจทย์ชุดนั้น
       aiKeywords = currentScenario.keywords;
     }
 
