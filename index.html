@@ -23,17 +23,22 @@
     </div>
 
     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded-r">
-      <h3 class="font-bold text-amber-800 mb-1">📢 สถานการณ์ที่กำหนด (Scenario):</h3>
-      <p class="text-gray-700 text-sm leading-relaxed select-none"> 
-        "ในชุมชนแห่งหนึ่ง ขยะพลาสติกจากบรรจุภัณฑ์อาหารเดลิเวอรีเพิ่มขึ้นอย่างรวดเร็วในช่วงปีที่ผ่านมา ส่งผลให้ถังขยะในหมู่บ้านล้น และมีกลิ่นเหม็นรบกวนในช่วงเย็น ผู้นำชุมชนจึงต้องการหาวิธีจัดการและรณรงค์ให้ลูกบ้านลดการใช้พลาสติก หรือนำมาคัดแยกอย่างถูกวิธีเพื่อลดผลกระทบต่อสิ่งแวดล้อมและสุขภาพของคนในพื้นที่"
-        <span class="block mt-2 pt-2 border-t border-amber-200 text-gray-500 text-xs italic">
-          "In a certain community, plastic waste from food delivery packaging has rapidly increased over the past year, causing village trash cans to overflow and emit a foul odor in the evening. The community leader wants to find ways to manage this issue and campaign for residents to reduce plastic use or separate waste properly to minimize environmental and health impacts on local residents."
+      <div class="flex justify-between items-center mb-1">
+        <h3 class="font-bold text-amber-800">📢 สถานการณ์ที่กำหนด (Scenario):</h3>
+      </div>
+      <p id="scenarioTextContent" class="text-gray-700 text-sm leading-relaxed select-none"> 
+        <!-- ข้อความโจทย์ภาษาไทยจะแสดงที่นี่ -->
+        <span id="scenarioTextEn" class="block mt-2 pt-2 border-t border-amber-200 text-gray-500 text-xs italic">
+          <!-- ข้อความโจทย์ภาษาอังกฤษจะแสดงที่นี่ -->
         </span>
       </p>
     </div>
 
     <form id="activityForm" onsubmit="handleFormSubmit(event)">
       
+      <!-- ซ่อนไอดีของโจทย์ที่สุ่มได้ไว้เพื่อส่งไปยัง Google Sheets -->
+      <input type="hidden" name="scenario_id" id="scenarioIdInput">
+
       <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">คำนำหน้า (Prefix)</label>
@@ -86,6 +91,161 @@
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwFwmM3d0aiYD24E5D6UlL6LJtvSV53mxlFRBohodxowObdYvnNoo9yD-XPgnJfn95z/exec";
 
+    // คลังโจทย์ 10 ชุด
+    const scenarios = [
+      {
+        id: 1,
+        th: "ในชุมชนแห่งหนึ่ง ขยะพลาสติกจากบรรจุภัณฑ์อาหารเดลิเวอรีเพิ่มขึ้นอย่างรวดเร็วในช่วงปีที่ผ่านมา ส่งผลให้ถังขยะในหมู่บ้านล้น และมีกลิ่นเหม็นรบกวนในช่วงเย็น ผู้นำชุมชนจึงต้องการหาวิธีจัดการและรณรงค์ให้ลูกบ้านลดการใช้พลาสติก หรือนำมาคัดแยกอย่างถูกวิธีเพื่อลดผลกระทบต่อสิ่งแวดล้อมและสุขภาพของคนในพื้นที่",
+        en: "In a certain community, plastic waste from food delivery packaging has rapidly increased over the past year, causing village trash cans to overflow and emit a foul odor in the evening. The community leader wants to find ways to manage this issue and campaign for residents to reduce plastic use or separate waste properly to minimize environmental and health impacts on local residents.",
+        keywords: {
+          who: ["ผู้นำชุมชน", "ลูกบ้าน", "คนในพื้นที่", "ชุมชน", "ชาวบ้าน", "คนในหมู่บ้าน", "ผู้บริโภค", "leader", "resident", "people", "villager", "community", "citizen"],
+          what: ["ขยะพลาสติก", "ขยะ", "เดลิเวอรี", "บรรจุภัณฑ์", "ล้นถัง", "กลิ่นเหม็น", "plastic", "waste", "garbage", "trash", "delivery", "packaging", "overflow", "smell", "odor"],
+          where: ["หมู่บ้าน", "ชุมชน", "ในหมู่บ้าน", "ในชุมชน", "ถังขยะ", "village", "community", "neighborhood", "bin", "trash can"],
+          when: ["ช่วงเย็น", "ช่วงปีที่ผ่านมา", "ปีที่แล้ว", "เวลาเย็น", "ตอนเย็น", "evening", "past year", "last year", "pm"],
+          why: ["สั่งอาหาร", "เดลิเวอรี", "ไม่คัดแยก", "ใช้พลาสติก", "ขยะเพิ่ม", "order", "delivery", "sort", "separate", "use plastic", "increase"],
+          how: ["จัดการ", "รณรงค์", "ลดการใช้", "คัดแยก", "แยกขยะ", "ลดพลาสติก", "manage", "campaign", "reduce", "sort", "separate", "less plastic", "recycle"]
+        }
+      },
+      {
+        id: 2,
+        th: "ที่โรงเรียนมัธยมแห่งหนึ่ง นักเรียนมักจะเดินชนกันตรงหัวมุมทางขึ้นอาคารเรียน 3 ในช่วงเวลาเปลี่ยนคาบเรียนตอนพักกลางวัน เนื่องจากทางเดินแคบและไม่มีป้ายเตือน ครูฝ่ายอาคารสถานที่ต้องการหาวิธีแก้ไขปัญหานี้เพื่อลดอุบัติเหตุและการบาดเจ็บของนักเรียน",
+        en: "At a high school, students often bump into each other at the corner of Building 3's staircase during class transitions at lunch break because the walkway is narrow and there are no warning signs. The school facilities teacher wants to find a solution to reduce accidents and injuries.",
+        keywords: {
+          who: ["นักเรียน", "ครู", "ครูฝ่ายอาคาร", "ฝ่ายอาคาร", "student", "teacher", "staff"],
+          what: ["เดินชนกัน", "ชนกัน", "อุบัติเหตุ", "บาดเจ็บ", "ทางเดินแคบ", "bump", "collide", "accident", "injury", "narrow"],
+          where: ["โรงเรียน", "อาคาร 3", "หัวมุม", "ทางขึ้นอาคาร", "ทางเดิน", "school", "building 3", "corner", "staircase", "walkway"],
+          when: ["พักกลางวัน", "เปลี่ยนคาบ", "ช่วงเวลาเปลี่ยนคาบ", "lunch", "class transition", "break"],
+          why: ["ทางเดินแคบ", "ไม่มีป้ายเตือน", "คนเยอะ", "รีบเดิน", "narrow", "no sign", "crowded", "rush"],
+          how: ["ติดป้าย", "ทำลูกศร", "แบ่งเลน", "กระจายเวลา", "ขยายทาง", "sign", "arrow", "lane", "schedule", "widen"]
+        }
+      },
+      {
+        id: 3,
+        th: "ร้านกาแฟสดในย่านใจกลางเมือง พบปัญหามีน้ำนมดิบเหลือทิ้งปริมาณมากจนหมดอายุทุกวันหยุดสุดสัปดาห์ (เสาร์-อาทิตย์) เนื่องจากประเมินยอดซื้อผิดพลาด ส่งผลให้ร้านมีต้นทุนที่สูญเปล่า เจ้าของร้านจึงต้องหาทางวางแผนสต็อกวัตถุดิบและจัดโปรโมชันลดการสูญเสีย",
+        en: "A fresh coffee shop in the city center faces an issue with a large amount of raw milk left over and expiring every weekend (Saturday-Sunday) due to incorrect sales forecasting. This results in wasted costs, so the owner needs to find a way to manage stock and create promotions to reduce waste.",
+        keywords: {
+          who: ["ร้านกาแฟ", "เจ้าของร้าน", "ลูกค้า", "พนักงาน", "owner", "coffee shop", "customer"],
+          what: ["นมหมดอายุ", "น้ำนมเหลือทิ้ง", "ต้นทุนสูญเปล่า", "วัตถุดิบเหลือ", "milk expired", "waste", "leftover", "cost"],
+          where: ["ร้านกาแฟ", "ใจกลางเมือง", "ในร้าน", "coffee shop", "city center", "store"],
+          when: ["วันหยุดสุดสัปดาห์", "เสาร์-อาทิตย์", "ทุกสัปดาห์", "weekend", "saturday", "sunday"],
+          why: ["ประเมินยอดผิด", "ซื้อเยอะเกิน", "คนซื้อน้อยลง", "miscalculation", "overstock", "wrong forecast"],
+          how: ["วางแผนสต็อก", "จัดโปรโมชัน", "ลดราคา", "แปรรูป", "stock management", "promotion", "discount", "forecast"]
+        }
+      },
+      {
+        id: 4,
+        th: "เกษตรกรผู้ปลูกทุเรียนในจังหวัดจันทบุรี ประสบปัญหาผลผลิตเสียหายจากโรครากเน่าโคนเน่าในช่วงฤดูฝน (มิถุนายน - สิงหาคม) ทำให้ทุเรียนยืนต้นตายและสูญเสียรายได้ เกษตรกรจึงต้องการระบบเตือนภัยความชื้นในดินและวิธีบำรุงรักษาหน้าดินที่ถูกต้อง",
+        en: "Durian farmers in Chanthaburi experience crop damage from root rot disease during the rainy season (June - August), causing durian trees to die and losing income. Farmers need a soil moisture warning system and proper topsoil maintenance methods.",
+        keywords: {
+          who: ["เกษตรกร", "ชาวสวน", "ผู้ปลูกทุเรียน", "farmer", "grower"],
+          what: ["โรครากเน่า", "ทุเรียนตาย", "เสียหาย", "สูญเสียรายได้", "root rot", "damage", "tree die", "loss of income"],
+          where: ["จันทบุรี", "สวนทุเรียน", "ในสวน", "ดิน", "chanthaburi", "orchard", "farm", "soil"],
+          when: ["ฤดูฝน", "มิถุนายน", "สิงหาคม", "ช่วงฝนตก", "rainy season", "june", "august", "rain"],
+          why: ["ความชื้นสูง", "ฝนตกหนัก", "น้ำขัง", "เชื้อรา", "high moisture", "heavy rain", "flooding", "fungus"],
+          how: ["ระบบเตือนภัย", "บำรุงหน้าดิน", "ระบายน้ำ", "ใช้ยาฆ่าเชื้อรา", "warning system", "drainage", "soil care", "fungicide"]
+        }
+      },
+      {
+        id: 5,
+        th: "ผู้สูงอายุในคอนโดมิเนียมแห่งหนึ่ง มักลืมกินยาโรคประจำตัวในช่วงเช้าหลังตื่นนอน เนื่องจากขวดยามีขนาดเล็กและตัวหนังสือบนฉลากลางเลือน บุตรหลานและนิติบุคคลจึงต้องการออกแบบกล่องยาอัจฉริยะหรือระบบแจ้งเตือนเพื่อความปลอดภัย",
+        en: "Elderly residents in a condominium often forget to take their daily medication in the morning after waking up because the medicine bottles are small and the labels are faded. Relatives and the condo management want to design a smart pillbox or notification system.",
+        keywords: {
+          who: ["ผู้สูงอายุ", "คนแก่", "บุตรหลาน", "นิติบุคคล", "elderly", "senior", "relative", "management"],
+          what: ["ลืมกินยา", "ฉลากเลือน", "อันตราย", "forget medication", "faded label", "forget medicine"],
+          where: ["คอนโดมิเนียม", "คอนโด", "ห้องพัก", "condominium", "condo", "room"],
+          when: ["ช่วงเช้า", "หลังตื่นนอน", "ตอนเช้า", "morning", "after waking up"],
+          why: ["ขวดยาเล็ก", "ตัวหนังสือเลือน", "ความจำเสื่อม", "small bottle", "faded text", "forgetful"],
+          how: ["กล่องยาอัจฉริยะ", "ระบบแจ้งเตือน", "ขยายตัวหนังสือ", "smart pillbox", "reminder", "alarm", "app"]
+        }
+      },
+      {
+        id: 6,
+        th: "พนักงานออฟฟิศในย่านธุรกิจ มีอาการออฟฟิศซินโดรม ปวดหลังและบ่าอย่างรุนแรงในช่วงปลายสัปดาห์ เนื่องจากต้องนั่งทำงานติดต่อกันเกิน 4 ชั่วโมงต่อวันโดยไม่เปลี่ยนอิริยาบถ ฝ่ายบุคคลจึงอยากจัดกิจกรรมปรับยืดกล้ามเนื้อและปรับสรีระโต๊ะทำงาน",
+        en: "Office workers in a business district suffer from office syndrome, experiencing severe back and shoulder pain by the end of the week because they sit for more than 4 consecutive hours a day without moving. HR wants to organize stretching activities and ergonomic workspace adjustments.",
+        keywords: {
+          who: ["พนักงานออฟฟิศ", "พนักงาน", "ฝ่ายบุคคล", "hr", "office worker", "employee", "human resources"],
+          what: ["ออฟฟิศซินโดรม", "ปวดหลัง", "ปวดบ่า", "ปวดเมื่อย", "office syndrome", "back pain", "shoulder pain"],
+          where: ["ออฟฟิศ", "ที่ทำงาน", "ย่านธุรกิจ", "โต๊ะทำงาน", "office", "workplace", "desk"],
+          when: ["ปลายสัปดาห์", "ทำงานเกิน 4 ชั่วโมง", "ระหว่างวัน", "end of the week", "4 hours", "during work"],
+          why: ["นั่งนานเกินไป", "ไม่เปลี่ยนอิริยาบถ", "โต๊ะไม่ถูกสรีระ", "sitting too long", "no movement", "bad posture"],
+          how: ["จัดกิจกรรมยืดเส้น", "ปรับโต๊ะทำงาน", "ยืดกล้ามเนื้อ", "stretching", "ergonomic", "adjust desk", "break"]
+        }
+      },
+      {
+        id: 7,
+        th: "ห้องสมุดประชาชนประจำจังหวัด มีจำนวนผู้เข้าใช้บริการลดลงกว่า 50% ในกลุ่มเด็กและเยาวชนช่วงปิดเทอมฤดูร้อน เนื่องจากหนังสือเก่าและขาดสื่อการเรียนรู้รูปสื่อดิจิทัล คณะกรรมการห้องสมุดจึงต้องปรับปรุงพื้นที่และเพิ่ม e-book",
+        en: "The provincial public library has seen a dynamic 50% decrease in child and youth visitors during the summer break because the books are outdated and there is a lack of digital media. The library committee needs to renovate the space and add e-books.",
+        keywords: {
+          who: ["เด็ก", "เยาวชน", "ผู้ใช้บริการ", "คณะกรรมการห้องสมุด", "children", "youth", "visitor", "committee"],
+          what: ["ผู้ใช้บริการลดลง", "คนเข้าน้อยลง", "หนังสือเก่า", "ขาดสื่อดิจิทัล", "fewer visitors", "outdated books", "lack of digital"],
+          where: ["ห้องสมุดประชาชน", "ห้องสมุด", "library", "public library"],
+          when: ["ช่วงปิดเทอม", "ฤดูร้อน", "ปิดเทอมหน้าร้อน", "summer break", "vacation"],
+          why: ["หนังสือเก่า", "ไม่มีสื่อดิจิทัล", "น่าเบื่อ", "old books", "no digital media", "boring"],
+          how: ["ปรับปรุงพื้นที่", "เพิ่ม e-book", "สื่อดิจิทัล", "จัดกิจกรรมใหม่", "renovate", "add e-book", "digital media"]
+        }
+      },
+      {
+        id: 8,
+        th: "กลุ่มแม่บ้านในหมู่บ้านห่างไกล ขาดรายได้เสริมในช่วงหลังฤดูแล้ง (มีนาคม-พฤษภาคม) หลังเสร็จสิ้นฤดูกาลเก็บเกี่ยว เนื่องจากไม่มีอาชีพทดแทน ประธานกลุ่มต้องการรณรงค์ให้หันมาแปรรูปผลิตภัณฑ์จากพืชท้องถิ่นเพื่อจำหน่ายออนไลน์",
+        en: "Housewife groups in a remote village lack supplementary income during the dry season (March - May) after the harvest ends because there are no alternative jobs. The group leader wants to campaign for processing local plant products to sell online.",
+        keywords: {
+          who: ["กลุ่มแม่บ้าน", "แม่บ้าน", "ประธานกลุ่ม", "ชาวบ้าน", "housewife", "women group", "leader"],
+          what: ["ขาดรายได้เสริม", "ไม่มีงานทำ", "ขาดรายได้", "lack of income", "no job", "unemployment"],
+          where: ["หมู่บ้านห่างไกล", "หมู่บ้าน", "ชุมชน", "ในหมู่บ้าน", "remote village", "rural area", "community"],
+          when: ["หลังฤดูแล้ง", "มีนาคม", "พฤษภาคม", "หลังเก็บเกี่ยว", "dry season", "march", "may", "post-harvest"],
+          why: ["เสร็จสิ้นเก็บเกี่ยว", "ไม่มีอาชีพทดแทน", "ฝนไม่ตก", "harvest ends", "no alternative job", "drought"],
+          how: ["แปรรูปผลิตภัณฑ์", "พืชท้องถิ่น", "จำหน่ายออนไลน์", "ขายออนไลน์", "food processing", "local product", "online sale"]
+        }
+      },
+      {
+        id: 9,
+        th: "ในตลาดสดชุมชน พ่อค้าแม่ค้าประสบปัญหาหนูกัดแทะสายไฟและทำลายสินค้าประเภทข้าวสารแห้งในช่วงกลางคืนหลังจากตลาดปิด ส่งผลให้เสี่ยงไฟไหม้และสินค้าเสียหายอย่างมาก หัวหน้าตลาดจึงต้องหาวิธีดักจับและทำความสะอาดครั้งใหญ่",
+        en: "In a local fresh market, vendors face an issue with rats biting electrical wires and damaging dry rice goods at night after the market closes. This risks fires and causes major inventory damage, so the market manager needs to find trapping and big-cleaning methods.",
+        keywords: {
+          who: ["พ่อค้าแม่ค้า", "หัวหน้าตลาด", "เจ้าของร้าน", "หนู", "vendor", "merchant", "manager", "rat"],
+          what: ["หนูกัดสายไฟ", "สินค้าเสียหาย", "เสี่ยงไฟไหม้", "หนูทำลายสินค้า", "rat bite", "damage", "fire risk", "pest"],
+          where: ["ตลาดสด", "ตลาด", "ในตลาด", "market", "fresh market"],
+          when: ["ช่วงกลางคืน", "หลังจากตลาดปิด", "ตอนกลางคืน", "night", "after closing"],
+          why: ["ตลาดสกปรก", "มีเศษอาหาร", "หนูชุกชุม", "dirty market", "food scraps", "rats infestation"],
+          how: ["ดักจับหนู", "ทำความสะอาดครั้งใหญ่", "บิ๊กคลีนนิ่ง", "เก็บของมิดชิด", "pest control", "trapping", "big cleaning", "clean up"]
+        }
+      },
+      {
+        id: 10,
+        th: "ผู้ใช้รถใช้ถนนบริเวณสี่แยกกลางเมือง มักขับรถฝ่าสัญญาณไฟจราจรในช่วงเวลากลางคืนหลังเที่ยงคืน (00:00 - 04:00 น.) ทำให้เกิดอุบัติเหตุรุนแรงบ่อยครั้ง ตำรวจจราจรในพื้นที่จึงต้องการติดตั้งระบบกล้องจับความเร็วและไฟสัญญาณแบบอัตโนมัติ",
+        en: "Commuters at a city center intersection often run red lights at night after midnight (00:00 - 04:00 AM), causing frequent severe accidents. Local traffic police want to install speed cameras and an automated traffic light system.",
+        keywords: {
+          who: ["ผู้ใช้รถใช้ถนน", "คนขับรถ", "ตำรวจจราจร", "ตำรวจ", "commuter", "driver", "traffic police", "officer"],
+          what: ["ฝ่าสัญญาณไฟ", "ฝ่าไฟแดง", "อุบัติเหตุรุนแรง", "run red light", "accident", "crash"],
+          where: ["สี่แยกกลางเมือง", "สี่แยก", "ถนนกลางเมือง", "intersection", "crossroad", "junction"],
+          when: ["เวลากลางคืน", "หลังเที่ยงคืน", "00:00", "04:00", "night", "midnight", "am"],
+          why: ["ถนนโล่ง", "ไม่มีตำรวจ", "ประมาท", "empty road", "no police", "carelessness", "reckless"],
+          how: ["ติดตั้งกล้อง", "กล้องจับความเร็ว", "ไฟสัญญาณอัตโนมัติ", "ปรับเงิน", "install camera", "speed camera", "automated light"]
+        }
+      }
+    ];
+
+    let currentScenario = {};
+    let aiKeywords = {};
+    const container = document.getElementById('questionsContainer');
+    let scores = { who: 0, what: 0, where: 0, when: 0, why: 0, how: 0 };
+
+    // ฟังก์ชันสำหรับสุ่มโจทย์
+    function initScenario() {
+      const randomIndex = Math.floor(Math.random() * scenarios.length);
+      currentScenario = scenarios[randomIndex];
+      
+      // แสดงเฉพาะตัวโจทย์ ไม่แสดงป้ายเลขชุดข้อสอบแล้ว
+      document.getElementById('scenarioTextContent').firstChild.textContent = ` "${currentScenario.th}" `;
+      document.getElementById('scenarioTextEn').innerText = `"${currentScenario.en}"`;
+      
+      // บันทึกไอดีโจทย์ลงใน Input ซ่อน (สำหรับส่งไปหลังบ้านเงียบๆ)
+      document.getElementById('scenarioIdInput').value = currentScenario.id;
+
+      // กำหนดคีย์เวิร์ดของโจทย์ชุดนั้น
+      aiKeywords = currentScenario.keywords;
+    }
+
     const qList = [
       { id: 'who', title: '1. Who (ใคร)', desc: 'ใครคือบุคคลที่เกี่ยวข้องกับปัญหานี้ หรือใครได้รับผลกระทบ?<br><span class="italic text-[11px] text-gray-400">Who is involved in or affected by this problem?</span>' },
       { id: 'what', title: '2. What (อะไร)', desc: 'ปัญหานี้คืออะไร เกิดอะไรขึ้นจากสถานการณ์ที่กำหนด?<br><span class="italic text-[11px] text-gray-400">What is the problem? What happened in the given scenario?</span>' },
@@ -94,18 +254,6 @@
       { id: 'why', title: '5. Why (ทำไม)', desc: 'ทำไมจึงเกิดปัญหานี้ขึ้น สาเหตุหลักมาจากอะไร?<br><span class="italic text-[11px] text-gray-400">Why did this problem happen? What is the root cause?</span>' },
       { id: 'how', title: '6. How (อย่างไร)', desc: 'จะมีแนวทางหรือวิธีการแก้ไขปัญหานี้ได้อย่างไรบ้าง?<br><span class="italic text-[11px] text-gray-400">How can this problem be solved or managed? What are the solutions?</span>' }
     ];
-
-    const aiKeywords = {
-      who: ["ผู้นำชุมชน", "ลูกบ้าน", "คนในพื้นที่", "ชุมชน", "ชาวบ้าน", "คนในหมู่บ้าน", "ผู้บริโภค", "leader", "resident", "people", "villager", "community", "citizen"],
-      what: ["ขยะพลาสติก", "ขยะ", "เดลิเวอรี", "บรรจุภัณฑ์", "ล้นถัง", "กลิ่นเหม็น", "plastic", "waste", "garbage", "trash", "delivery", "packaging", "overflow", "smell", "odor"],
-      where: ["หมู่บ้าน", "ชุมชน", "ในหมู่บ้าน", "ในชุมชน", "ถังขยะ", "village", "community", "neighborhood", "bin", "trash can"],
-      when: ["ช่วงเย็น", "ช่วงปีที่ผ่านมา", "ปีที่แล้ว", "เวลาเย็น", "ตอนเย็น", "evening", "past year", "last year", "pm"],
-      why: ["สั่งอาหาร", "เดลิเวอรี", "ไม่คัดแยก", "ใช้พลาสติก", "ขยะเพิ่ม", "order", "delivery", "sort", "separate", "use plastic", "increase"],
-      how: ["จัดการ", "รณรงค์", "ลดการใช้", "คัดแยก", "แยกขยะ", "ลดพลาสติก", "manage", "campaign", "reduce", "sort", "separate", "less plastic", "recycle"]
-    };
-
-    const container = document.getElementById('questionsContainer');
-    let scores = { who: 0, what: 0, where: 0, when: 0, why: 0, how: 0 };
 
     qList.forEach(q => {
       const div = document.createElement('div');
@@ -138,6 +286,8 @@
       `;
       container.appendChild(div);
     });
+
+    initScenario();
 
     function preventPaste(e, qId) {
       e.preventDefault(); 
@@ -197,12 +347,10 @@
       return parseFloat(calculatedScore.toFixed(1));
     }
 
-    // ปรับปรุง: ย้ายส่วนคำนวณคะแนนมาแสดงผลตรงนี้เพื่ออัปเดตหลังจากส่งสำเร็จเท่านั้น
     function displayFinalScore() {
       let finalScore = calculateFinalScore();
       document.getElementById('totalScoreDisplay').innerText = finalScore.toFixed(1) + " / 5";
       
-      // แสดงกล่องคะแนนและเลื่อนจอมาโฟกัส
       const scoreBox = document.getElementById('scoreBox');
       scoreBox.classList.remove('hidden');
       scoreBox.scrollIntoView({ behavior: 'smooth' });
@@ -220,6 +368,7 @@
       const form = document.getElementById('activityForm');
 
       const formDataObj = {
+        scenario_id: form.scenario_id.value,
         prefix: form.prefix.value,
         name: form.name.value,
         studentId: form.studentId.value,
@@ -254,11 +403,8 @@
       })
       .then(response => {
         alert("ส่งใบกิจกรรมสำเร็จ! คะแนนถูกจัดเก็บเรียบร้อยแล้ว 🚀");
-        
-        // เรียกฟังก์ชันคำนวณและแสดงผลคะแนนทันทีที่ส่งเสร็จ
         displayFinalScore();
         
-        // คืนสถานะปุ่มและปรับเป็นโหมดส่งซ้ำ (Resubmit) เผื่อนักเรียนอยากแก้ไข
         btn.disabled = false;
         btn.className = "w-full mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-lg transition duration-200 cursor-pointer shadow-md";
         btn.innerText = "🔄 แก้ไขคำตอบและส่งใหม่อีกครั้ง (Resubmit)";
